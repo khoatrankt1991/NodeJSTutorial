@@ -1,0 +1,40 @@
+In this module, we'll cover how to create child processes in your node application.
+Anh then, we'll look at Node's experimental "cluster" module for scaling your applicatoin across multiple processes.
+so, let's get started
+1 common criticism of Node application is they do not handle CPI intensive tests well.
+this is because spending too much CPU time on any one task in your  Node app will block the event loop and prevent other work from being done.
+One strategy for dealing with this issue is the use of "child processes"
+A cpu intensive task, resizing an image for example can be deferred to a child process while the main Node application continues to process events.
+Node has four ways to lauch child processes and all are a part of the child process module.
+The first is the spawn function which will launch a new process and run the command specified in the first parameter.
+An optional array of arguments will be passed to the command.
+This funciton returns an instance of a childProcess object which is an EventEmitter.
+it emits exit and close events which can be listened for by the parent Node application.
+The child process return value also has streams for the standard in,out and error of the child process.
+The parent or spwaning process can pipe data to and from these streams much like you would the similar streams provided by the process object.
+
+The second way to launch a child process in Node is with the exec function.
+This function runs the provided command in a shell.
+Any command line arguments you wish to provide must be included 
+in the string past as the command to execute. you can even pipe between Unix commands within a single invocation of exec.
+For example, piping the output of LS to the Unix grep command.
+The third method is the execFile function. This is similar to exec but instead of launching a process and executing the command,
+the file parameter is executed directly.
+
+One final method for invoking a child process in Node is particularly optimized for spawning new child Node processes.
+This is done with the fork function.
+It is a specialized version of the spawn function especially for creating Node processes.
+Like spawn, it returns an instance of the ChildProcess object.
+However, in this case, it adds an additional send function and messge event to ficilitate message passing between the parent and child processes.
+Let's take a look at some sample code from the Node.js website that uses the fork function.
+here we have a parent.js script which requires the child process module. it then calls the fork function to invoke node again to run the child.js script.
+It listens for the message event from the returned ChildProcess object logging the message to the console.
+it then attempts to send a message to the newly forked Node process.
+When the separate Node process runs child.js, it listens for the message event and logs the message to the console.
+It too attempts to send a message back to its parent.
+Each process send its message which is picked up by the other and logged to the console.
+Let's take a look at some examples of launching child processes in Node.js
+
+
+
+
